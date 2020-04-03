@@ -17,8 +17,8 @@ html, body, #root{
 }
 
 body{
+  background: linear-gradient(-0deg, #00b4db, #0083b0);
   -webkit-font-smoothing: antialiased !important;
-
 }
 
 ul{

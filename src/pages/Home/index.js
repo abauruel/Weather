@@ -3,6 +3,7 @@ import oauth from 'oauth';
 import { FaSearch } from 'react-icons/fa';
 import { Container } from './styles';
 import Cities from '../../components/Cities';
+import InfoCity from '../../components/InfoCity';
 
 export default function Home() {
   const [city, setCity] = useState('');
@@ -10,12 +11,13 @@ export default function Home() {
 
   function CheckForecast(e) {
     e.preventDefault();
-    const header = { 'X-Yahoo-App-Id': 'yPloG656' };
+
+    const header = { 'X-Yahoo-App-Id': process.env.REACT_APP_API_ID };
     const request = new oauth.OAuth(
       null,
       null,
-      'dj0yJmk9cDJ1Q2E2OFdzYjVhJmQ9WVdrOWVWQnNiMGMyTlRZbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTBk',
-      '0aa1ab7698462cfd6450e33e78af6b4f47a47485',
+      process.env.REACT_APP_CONSUMER_KEY,
+      process.env.REACT_APP_CONSUMER_SECRET,
       '1.0',
       null,
       'HMAC-SHA1',
@@ -32,19 +34,22 @@ export default function Home() {
           console.log(err);
         } else {
           setCity(JSON.parse(data));
-          console.tron.log(city);
+          console.log(data);
+          setInputCity('');
         }
       }
     );
+  }
+  function handleClose() {
+    setCity('');
   }
   return (
     <Container>
       <form>
         <p>Weather Forecast</p>
-        <div>
-          <p>{city?.location?.city}</p>
-        </div>
-        <div>
+        {city && <InfoCity city={city} handleClose={handleClose} />}
+
+        <div className="divsearch">
           <input
             type="text"
             placeholder="enter the city name"
@@ -55,8 +60,12 @@ export default function Home() {
             <FaSearch size={20} />
           </button>
         </div>
-        <hr />
-        <Cities city={city} />
+        {city && (
+          <>
+            <hr />
+            <Cities city={city} />
+          </>
+        )}
       </form>
     </Container>
   );
